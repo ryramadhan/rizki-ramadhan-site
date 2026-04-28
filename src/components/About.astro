@@ -1,0 +1,42 @@
+---
+import Section from './ui/Section.astro';
+import Badge from './ui/Badge.astro';
+import { translations } from '../content/portfolio';
+
+const t = translations.en;
+const portfolio = t.portfolio;
+---
+
+<Section id="about" eyebrow={t.about.eyebrow} title={t.about.title}>
+  <div class="space-y-8">
+    <p class="text-sm leading-7 text-[var(--muted)] sm:text-base">
+      {portfolio.about}
+    </p>
+
+    <div class="grid gap-3 sm:grid-cols-2">
+      {t.about.cards.map((card) => (
+        <div class="rounded-[var(--radius)] border border-[var(--border)] bg-[rgba(245,245,245,0.02)] p-4">
+          <p class="text-xs font-medium uppercase tracking-[0.18em] text-[var(--muted-2)]">
+            {card.title}
+          </p>
+          <p class="mt-2 text-sm text-[var(--muted)] leading-7">{card.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="pt-8">
+      <p class="text-xs font-medium uppercase tracking-[0.18em] text-[var(--muted-2)]">
+        {t.skills.eyebrow}
+      </p>
+      <p class="mt-2 text-lg font-semibold tracking-[-0.02em] text-[var(--text)]">
+        {t.skills.title}
+      </p>
+      <p class="mt-1 text-sm text-[var(--muted)]">{t.skills.description}</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {portfolio.skills.map((skill) => (
+          <Badge>{skill}</Badge>
+        ))}
+      </div>
+    </div>
+  </div>
+</Section>
