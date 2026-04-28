@@ -1,0 +1,74 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog");
+    return posts.map((post) => ({
+        params: { slug: post.id },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={`${post.data.title} — ryr.dev`}>
+    <main class="max-w-2xl mx-auto px-6 py-24">
+        <a
+            href="/blog"
+            class="inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-white transition-colors mb-12"
+        >
+            ← Kembali ke Blog
+        </a>
+
+        <!-- Header -->
+        <div class="mb-10">
+            <p
+                class="text-xs font-medium tracking-widest text-neutral-500 uppercase mb-3"
+            >
+                {
+                    post.data.pubDate.toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                    })
+                }
+            </p>
+            <h1 class="text-2xl font-semibold text-white leading-snug">
+                {post.data.title}
+            </h1>
+            <p class="text-neutral-400 text-sm mt-3 leading-relaxed">
+                {post.data.description}
+            </p>
+            {
+                post.data.tags && (
+                    <div class="flex gap-2 mt-4 flex-wrap">
+                        {post.data.tags.map((tag) => (
+                            <span class="text-xs text-neutral-600">#{tag}</span>
+                        ))}
+                    </div>
+                )
+            }
+        </div>
+
+        <hr class="border-neutral-800 mb-10" />
+
+        <!-- Content -->
+        <article
+            class="prose prose-invert prose-sm max-w-none
+      prose-headings:font-medium prose-headings:text-white
+      prose-p:text-neutral-400 prose-p:leading-relaxed
+      prose-a:text-white prose-a:underline-offset-4
+      prose-code:text-neutral-300 prose-code:bg-neutral-900 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+      prose-pre:bg-neutral-900 prose-pre:border prose-pre:border-neutral-800
+      prose-strong:text-white
+      prose-li:text-neutral-400
+      prose-hr:border-neutral-800
+      prose-th:text-white prose-td:text-neutral-400"
+        >
+            <Content />
+        </article>
+    </main>
+</Layout>
