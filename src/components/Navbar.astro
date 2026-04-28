@@ -1,0 +1,96 @@
+---
+import { translations } from "../content/portfolio";
+
+// default to english for static generation
+const t = translations.en;
+
+const navItems = [
+  { label: t.nav.home, href: "#home" },
+  { label: t.nav.about, href: "#about" },
+  { label: t.nav.projects, href: "#projects" },
+  { label: "Blog", href: "/blog" },
+  { label: t.nav.contact, href: "#contact" },
+];
+---
+
+<header
+  id="navbar"
+  class="sticky top-0 z-50 border-b border-transparent transition-colors duration-200"
+>
+  <div
+    class="bg-[rgba(15,15,15,0.55)] backdrop-blur-md supports-[backdrop-filter]:bg-[rgba(15,15,15,0.42)]"
+  >
+    <div
+      class="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-4 sm:px-7"
+    >
+      <a
+        href="#home"
+        class="text-sm font-semibold tracking-[-0.02em] text-[var(--text)]"
+        data-nav-link
+      >
+        ryr<span class="text-[var(--muted-2)]">.dev</span>
+      </a>
+
+      <nav class="hidden items-center gap-6 sm:flex">
+        {
+          navItems.map((item) => (
+            <a
+              href={item.href}
+              class="group relative text-sm text-[var(--muted)]"
+              data-nav-link
+            >
+              <span class="relative">
+                {item.label}
+                <span class="pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-[rgba(245,245,245,0.35)] transition-transform duration-200 group-hover:scale-x-100" />
+              </span>
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="#contact"
+          class="rounded-xl border border-[var(--border)] px-3 py-2 text-sm font-medium text-[var(--text)] bg-[rgba(245,245,245,0.06)] transition-colors duration-200 hover:bg-[rgba(245,245,245,0.10)] hover:border-[var(--border-strong)]"
+          data-nav-link
+        >
+          {t.nav.cta}
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  // smooth scroll handler
+  const navLinks = document.querySelectorAll("[data-nav-link]");
+  navLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const href = link.getAttribute("href");
+      if (!href?.startsWith("#")) return;
+
+      const target = document.querySelector(href);
+      if (!(target instanceof HTMLElement)) return;
+
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  // scroll effect for navbar border
+  const navbar = document.getElementById("navbar");
+  if (navbar) {
+    const handleScroll = () => {
+      if (window.scrollY > 8) {
+        navbar.classList.add("border-[var(--border)]");
+        navbar.classList.remove("border-transparent");
+      } else {
+        navbar.classList.add("border-transparent");
+        navbar.classList.remove("border-[var(--border)]");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+  }
+</script>
