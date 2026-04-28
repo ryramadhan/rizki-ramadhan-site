@@ -1,0 +1,101 @@
+---
+import Section from './ui/Section.astro';
+import { translations } from '../content/portfolio';
+
+const t = translations.en;
+const portfolio = t.portfolio;
+---
+
+<Section 
+  id="contact" 
+  eyebrow={t.contact.eyebrow} 
+  title={t.contact.title}
+  description={t.contact.description}
+>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <!-- Email & Socials Card -->
+    <div class="rounded-[var(--radius)] border border-[var(--border)] bg-[rgba(245,245,245,0.02)] p-5">
+      <p class="text-sm font-medium text-[var(--text)]">{t.contact.emailTitle}</p>
+      <a
+        class="mt-2 inline-block text-sm text-[var(--muted)] underline decoration-[rgba(245,245,245,0.20)] underline-offset-4 transition-colors hover:text-[var(--text)]"
+        href={`mailto:${portfolio.email}`}
+      >
+        {portfolio.email}
+      </a>
+
+      <div class="mt-5 space-y-2">
+        {portfolio.socials.map((social) => (
+          social.disabled ? (
+            <span class="block text-sm text-[var(--muted-2)] cursor-not-allowed">
+              {social.label} (coming soon)
+            </span>
+          ) : (
+            <a
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="block text-sm text-[var(--muted)] transition-colors hover:text-[var(--text)]"
+            >
+              {social.label}
+            </a>
+          )
+        ))}
+      </div>
+    </div>
+
+    <!-- Contact Form dengan vanilla JS untuk interaktivitas -->
+    <div 
+      class="rounded-[var(--radius)] border border-[var(--border)] bg-[rgba(245,245,245,0.02)] p-5"
+      id="contact-form-container"
+    >
+      <form id="contact-form">
+        <label class="block">
+          <span class="text-xs font-medium uppercase tracking-[0.18em] text-[var(--muted-2)]">
+            {t.contact.messageLabel}
+          </span>
+          <textarea
+            required
+            rows={5}
+            placeholder={t.contact.messagePlaceholder}
+            class="mt-3 w-full resize-none rounded-xl border border-[var(--border)] bg-[rgba(15,15,15,0.4)] px-4 py-3 text-sm text-[var(--text)] placeholder:text-[rgba(245,245,245,0.35)] outline-none transition-colors focus:border-[var(--border-strong)]"
+          />
+        </label>
+
+        <div class="mt-4 flex items-center justify-between gap-3">
+          <p class="text-xs text-[var(--muted-2)]" id="form-helper">
+            {t.contact.helperIdle}
+          </p>
+          <button
+            type="submit"
+            id="form-submit-btn"
+            class="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-0 bg-[rgba(245,245,245,0.08)] text-[var(--text)] border border-[var(--border)] hover:bg-[rgba(245,245,245,0.11)] hover:border-[var(--border-strong)]"
+          >
+            {t.contact.sendIdle}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</Section>
+
+<script>
+  (function() {
+    const form = document.getElementById('contact-form');
+    const helper = document.getElementById('form-helper');
+    const submitBtn = document.getElementById('form-submit-btn');
+    
+    if (!form || !helper || !submitBtn) return;
+    
+    const helperIdle = '{t.contact.helperIdle}';
+    const helperSent = '{t.contact.helperSent}';
+    const sendIdle = '{t.contact.sendIdle}';
+    const sendSent = '{t.contact.sendSent}';
+    
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      helper.textContent = helperSent;
+      submitBtn.textContent = sendSent;
+      (submitBtn as HTMLButtonElement).disabled = true;
+    });
+  })();
+</script>
