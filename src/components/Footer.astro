@@ -1,0 +1,15 @@
+---
+import { translations } from "../content/portfolio";
+
+const t = translations.en;
+const portfolio = t.portfolio;
+---
+
+<footer class="py-10">
+  <div class="mx-auto w-full max-w-5xl px-5 sm:px-7">
+    <p class="text-xs text-[var(--muted-2)]">
+      © {new Date().getFullYear()}
+      {portfolio.name}. {t.footer.builtWith}
+    </p>
+  </div>
+</footer>
