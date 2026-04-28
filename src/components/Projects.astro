@@ -1,0 +1,99 @@
+---
+import { Image } from "astro:assets";
+import Section from "./ui/Section.astro";
+import Card from "./ui/Card.astro";
+import Badge from "./ui/Badge.astro";
+import { translations } from "../content/portfolio";
+
+const t = translations.en;
+const portfolio = t.portfolio;
+---
+
+<Section
+  id="projects"
+  eyebrow={t.projects.eyebrow}
+  title={t.projects.title}
+  description={t.projects.description}
+>
+  <div class="grid gap-4 sm:gap-5">
+    {
+      portfolio.projects.map((project) => {
+        const githubUrl = project.links?.find(
+          (l) => l.label === "GitHub",
+        )?.href;
+        const CardContent = (
+          <Card class="overflow-hidden transition duration-200 hover:scale-[1.01] hover:border-[var(--border-strong)]">
+            {project.image && (
+              <div class="group/image relative aspect-[20/9] w-full overflow-hidden border-b border-[var(--border)] bg-neutral-900/40">
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  width={800}
+                  height={360}
+                  class="h-full w-full object-cover grayscale contrast-[1.05] transition-all duration-500 group-hover/image:grayscale-0"
+                  loading="lazy"
+                />
+              </div>
+            )}
+            <div class="p-5 sm:p-6">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="text-base font-semibold tracking-[-0.02em] text-[var(--text)] sm:text-lg">
+                    {project.title}
+                  </h3>
+                  {project.period && (
+                    <span class="text-xs text-[var(--muted-2)]">
+                      · {project.period}
+                    </span>
+                  )}
+                </div>
+                {project.organization && (
+                  <p class="mt-1 text-sm text-[var(--muted)]">
+                    {project.organization}
+                  </p>
+                )}
+                <p class="mt-2 text-sm leading-7 text-[var(--muted)]">
+                  {project.description}
+                </p>
+
+                <div class="mt-4 flex flex-wrap gap-2">
+                  {project.stack.map((tech) => (
+                    <Badge class="hover:text-[var(--muted)]">{tech}</Badge>
+                  ))}
+                </div>
+              </div>
+
+              {project.highlights?.length ? (
+                <ul class="mt-5 space-y-2 text-sm text-[var(--muted)]">
+                  {project.highlights.map((highlight) => (
+                    <li class="flex gap-2">
+                      <span class="mt-[0.45em] h-1 w-1 shrink-0 rounded-full bg-[rgba(245,245,245,0.35)]" />
+                      <span class="leading-7">{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          </Card>
+        );
+
+        return (
+          <div>
+            {githubUrl ? (
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block"
+              >
+                {CardContent}
+              </a>
+            ) : (
+              CardContent
+            )}
+          </div>
+        );
+      })
+    }
+  </div>
+</Section>
