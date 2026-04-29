@@ -1,7 +1,6 @@
 ---
 import { translations } from "../content/portfolio";
 
-// default to english for static generation
 const t = translations.en;
 
 const navItems = [
@@ -56,41 +55,98 @@ const navItems = [
         >
           {t.nav.cta}
         </a>
+
+        <button
+          id="menu-toggle"
+          class="sm:hidden p-2 text-[var(--muted)] hover:text-[var(--text)]"
+          aria-label="Menu"
+        >
+          <svg
+            id="icon-open"
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg
+            id="icon-close"
+            class="w-5 h-5 hidden"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
 </header>
 
+<!-- mobile menu -->
+<nav
+  id="mobile-menu"
+  class="fixed inset-x-0 top-[65px] z-40 hidden sm:hidden bg-[rgba(15,15,15,0.98)] border-b border-[var(--border)]"
+>
+  <div class="px-5 py-4 space-y-1">
+    {
+      navItems.map((item) => (
+        <a
+          href={item.href}
+          class="block py-2 text-sm text-[var(--muted)] hover:text-[var(--text)]"
+          data-nav-link
+        >
+          {item.label}
+        </a>
+      ))
+    }
+  </div>
+</nav>
+
 <script>
-  // smooth scroll handler
-  const navLinks = document.querySelectorAll("[data-nav-link]");
-  navLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      const href = link.getAttribute("href");
-      if (!href?.startsWith("#")) return;
+  const btn = document.getElementById("menu-toggle")!;
+  const menu = document.getElementById("mobile-menu")!;
+  const [openIcon, closeIcon] = btn.querySelectorAll("svg");
 
-      const target = document.querySelector(href);
-      if (!(target instanceof HTMLElement)) return;
+  btn.onclick = () => {
+    menu.classList.toggle("hidden");
+    openIcon.classList.toggle("hidden");
+    closeIcon.classList.toggle("hidden");
+  };
 
-      e.preventDefault();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
+  menu.querySelectorAll("a").forEach((a) => {
+    a.addEventListener("click", () => {
+      menu.classList.add("hidden");
+      openIcon.classList.remove("hidden");
+      closeIcon.classList.add("hidden");
     });
   });
 
-  // scroll effect for navbar border
-  const navbar = document.getElementById("navbar");
-  if (navbar) {
-    const handleScroll = () => {
-      if (window.scrollY > 8) {
-        navbar.classList.add("border-[var(--border)]");
-        navbar.classList.remove("border-transparent");
-      } else {
-        navbar.classList.add("border-transparent");
-        navbar.classList.remove("border-[var(--border)]");
-      }
-    };
+  document
+    .querySelectorAll<HTMLAnchorElement>("[data-nav-link]")
+    .forEach((a) => {
+      a.addEventListener("click", (e: MouseEvent) => {
+        const href = a.getAttribute("href");
+        if (href?.startsWith("#")) {
+          e.preventDefault();
+          document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    });
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-  }
+  window.addEventListener("scroll", () => {
+    document
+      .getElementById("navbar")
+      ?.classList.toggle("border-[var(--border)]", scrollY > 8);
+  });
 </script>

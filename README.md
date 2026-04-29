@@ -11,7 +11,7 @@ Portfolio pribadi dibangun dengan Astro JS + Tailwind CSS. Sebelumnya menggunaka
 | Komponen | JavaScript |
 |----------|------------|
 | Hero, About, Projects | ❌ None — static HTML |
-| Navbar | ✅ Vanilla JS — smooth scroll |
+| Navbar | ✅ Vanilla JS — smooth scroll, mobile hamburger toggle |
 | Contact | ✅ Vanilla JS — form state |
 
 ## Tech Stack
